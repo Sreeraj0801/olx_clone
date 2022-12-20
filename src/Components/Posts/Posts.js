@@ -1,11 +1,36 @@
-import React from 'react';
-
+import React,{useState, useEffect,useContext} from 'react';
+import { collection, doc, getDocs } from "firebase/firestore";
+import { db } from '../../Firebase/Config';
 import Heart from '../../assets/Heart';
 import './Post.css';
+import { firebaseContext } from '../../Store/Context';
+import { PostContext } from '../../Store/PostContext';
+import {useNavigate} from 'react-router-dom';
 
 function Posts() {
+  const navigate = useNavigate();
+
+  let proArray = [];
+  
+  const {firebase} = useContext(firebaseContext)
+  const [products,setProducts] = useState([]);
+  const {setPostDetails} = useContext(PostContext)
+
+    useEffect(async()=>{  
+    const querySnapshot = await getDocs(collection(db, "products"))
+    querySnapshot.forEach((doc) => {
+      let details = {
+        id:doc.id,
+        ...doc.data()
+      }
+       proArray.push(details);
+       
+})
+setProducts(proArray)
+  },[])
 
   return (
+
     <div className="postParentDiv">
       <div className="moreView">
         <div className="heading">
@@ -13,24 +38,36 @@ function Posts() {
           <span>View more</span>
         </div>
         <div className="cards">
-          <div
-            className="card"
-          >
-            <div className="favorite">
-              <Heart></Heart>
-            </div>
-            <div className="image">
-              <img src="../../../Images/R15V3.jpg" alt="" />
-            </div>
-            <div className="content">
-              <p className="rate">&#x20B9; 250000</p>
-              <span className="kilometer">Two Wheeler</span>
-              <p className="name"> YAMAHA R15V3</p>
-            </div>
-            <div className="date">
-              <span>Tue May 04 2021</span>
-            </div>
-          </div>
+            {
+              products.map((product)=>{
+                return(
+                  <div
+                  className="card"
+                  onClick={()=>{
+                    console.log("[[[[[[[[[[[[[[[[[");
+                    console.log(product)
+                    setPostDetails(product)
+                    navigate('/viewpost')
+                  }}
+                >
+                  <div className="favorite">
+                    <Heart></Heart>
+                  </div>
+                  <div className="image">
+                    <img src={product.imageurl} alt="" />
+                  </div>
+                  <div className="content">
+                    <p className="rate">&#x20B9; {product.price}</p>
+                    <span className="kilometer">{product.name}</span>
+                    <p className="name">{product.category}</p>
+                  </div>
+                  <div className="date">
+                    <span>{product.createdAAt}</span>
+                  </div>
+                </div>
+                )
+              })
+            }
         </div>
       </div>
       <div className="recommendations">
@@ -38,22 +75,27 @@ function Posts() {
           <span>Fresh recommendations</span>
         </div>
         <div className="cards">
-          <div className="card">
+        {        
+        products.map((product)=>{
+          return(
+            <div className="card">
             <div className="favorite">
               <Heart></Heart>
             </div>
             <div className="image">
-              <img src="../../../Images/R15V3.jpg" alt="" />
+              <img src={product.imageurl} alt="" />
             </div>
             <div className="content">
-              <p className="rate">&#x20B9; 250000</p>
-              <span className="kilometer">Two Wheeler</span>
-              <p className="name"> YAMAHA R15V3</p>
+              <p className="rate">&#x20B9; {product.price}</p>
+              <span className="kilometer">{product.name}</span>
+              <p className="name">{product.category}</p>
             </div>
             <div className="date">
-              <span>10/5/2021</span>
+              <span>{product.createdAAt}</span>
             </div>
           </div>
+          )
+        })}
         </div>
       </div>
     </div>
