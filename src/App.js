@@ -28,7 +28,7 @@ function App() {
     <div>
       <Post>
       <Routes>
-        <Route path='*' element={<>404 Page Not Found</>}/>
+        <Route path='*' element={<Home />}/>
         <Route path='/' element={<Home />}/>
         <Route path='/signup' element={<Signup />}/>
         <Route path='/login' element={<Login />}/>

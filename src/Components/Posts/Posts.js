@@ -44,8 +44,6 @@ setProducts(proArray)
                   <div
                   className="card"
                   onClick={()=>{
-                    console.log("[[[[[[[[[[[[[[[[[");
-                    console.log(product)
                     setPostDetails(product)
                     navigate('/viewpost')
                   }}
