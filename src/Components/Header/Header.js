@@ -43,10 +43,12 @@ function Header() {
           <Arrow></Arrow>
         </div>
         <div className="loginPage">
-          <span>{user ? user.email : 'Login'}</span>
+          <span style={{cursor:'pointer'}}><Link  to={user ? `/create` : '/Login'}>
+          {user ? user.email : 'Login'}
+          </Link></span>
           <hr />
         </div>
-        {user ? <span onClick={()=>{
+        {user ? <span style={{cursor:'pointer'}} onClick={()=>{
           const auth = getAuth();
           signOut(auth).then(() => {
             navigate('/login')
